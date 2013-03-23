@@ -93,9 +93,15 @@
 
         <!-- Part 1: Wrap all page content here -->
         <div id="wrap">
-
+            
             <!-- Begin page content -->
             <div class="container">
+                <div id="popupDialog" title="Choose avatar">
+                    <p>
+                        <label for="avatarURL">Please input a new URL:</label>
+                        <input type="text" id="avatarURL" />
+                    </p>
+                </div>                
                 <div class="row-fluid">
                     <input name="" id="msn" class="span12" placeholder="Write and press Enter..." >
                 </div>
@@ -123,12 +129,14 @@
             <div id="push"></div>
         </div>
 
-
-
+        
+        
         <!-- Le javascript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="lib/js/libs/jquery-1.9.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
         <script src="lib/js/libs/aes.js"></script>
         <script src="lib/js/bootstrap.min.js"></script>
         <script type="text/javascript">
@@ -137,6 +145,7 @@
             var user;
             var room = 'master';
             var last_id_group;
+            var avatar_URL = '';
 
 
             //functions
@@ -274,13 +283,23 @@
                     console.log(data.msn);
                 }
                 msn = $('<div style="display:none" class="msn user_' + data.user + ' room_' + room + '" >\n\
-                    <span class="circle-border">???</span><b>' + data.user + ': </b><span class="content">' + data.msn +
+                    <span class="avatar_' + data.user +' circle-border">???</span><b>' + data.user + ': </b><span class="content">' + data.msn +
                         '</span><span class="pull-right muted" >&nbsp; ' + data.enviat + '</span><div class="clearfix"></div></div>');
                 msn.prependTo('#board_chat').slideDown(100);
+
+                $('.avatar_' + user).css( 'background-image', 'url(' + avatar_URL +')');
+
+                $(".avatar_" + data.user).click( function() {
+                    $("#popupDialog").dialog('open');
+                });
+                
             }
+                        
+
 
             //bootstrap
             $(document).ready(function() {
+
                 user = 'Anon' + Math.random().toString(20).substring(14);
                 $('#wellcome_user').html(user);
 
@@ -290,7 +309,7 @@
                 //refresh timer
                 setInterval(function() {
                     refresh()
-                }, 300);
+                }, 3000);
 
                 //events
                 $('#msn').keypress(function(e) {
@@ -299,8 +318,28 @@
                         $('#msn').val('');
                     }
                 });
-            });
-        </script>
 
+                $('#popupDialog').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    buttons: {
+                  'Cancel': function() {
+                               $(this).dialog('close');
+                            },
+                  'Accept': function() {
+                                avatar_URL = $(this).find('#avatarURL').val();
+                                $(this).find('#avatarURL').val('');
+                               $('.avatar_' + user).css( 'background-image', 'url(' + avatar_URL +')');
+                               $(this).dialog('close');
+                            }
+                    }
+                });
+                
+
+
+            });
+                        
+        </script>
+        
     </body>
 </html>
