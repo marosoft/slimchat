@@ -32,7 +32,7 @@ $app->post('/send_msn', function() use ($app, $entityManager){
 });
 
 //refresh
-$app->post('/refresh', function() use ($app, $msn, $entityManager){
+$app->post('/refresh', function() use ($app, $entityManager){
     $qb = $entityManager->createQueryBuilder();
     $qb->add('select', 'm.id')
             ->add('from', 'Msn m')

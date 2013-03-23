@@ -37,7 +37,7 @@
             #board_chat{
                 padding-top: 15px;
             }
-            
+
             .msn{
                 margin-bottom: 8px;
             }
@@ -58,6 +58,23 @@
             .container .credit {
                 margin: 20px 0;
             }
+
+            .circle-border {
+                width:49px;
+                height:49px;
+                border-radius:8px;
+                -moz-border-radius: 8;
+                -webkit-border-radius: 8;
+                -khtml-border-radius: 8;
+                font-size:20px; color:#fff;
+                line-height:50px;
+                text-align:center;
+                background:#ccc;
+                float: left;
+                margin-right: 10px;
+                border: 1px solid #999;
+            }
+            
 
         </style>
         <link href="lib/css/bootstrap-responsive.css" rel="stylesheet">
@@ -120,7 +137,7 @@
             var user;
             var room = 'master';
             var last_id_group;
-            
+
 
             //functions
             function refresh() {
@@ -129,7 +146,7 @@
                     room: room
                 },
                 function(data) {
-                    if ( typeof data[0].id != 'undefined' ){
+                    if (typeof data[0].id != 'undefined') {
                         last_id_group = data[0].id;
                         data.reverse();
                         $.each(data, function(key, val) {
@@ -216,32 +233,32 @@
             function ncript(st) {
                 try {
                     st = CryptoJS.AES.encrypt(st, ncrip_hash);
-                } catch(err){
+                } catch (err) {
                     console.log(err);
                 }
                 return st.toString();
             }
             function dcript(st) {
-                try{
+                try {
                     st = CryptoJS.AES.decrypt(st, ncrip_hash);
                     st = st.toString(CryptoJS.enc.Utf8);
-                } catch(err){
+                } catch (err) {
                     console.log(err);
                 }
                 return st;
             }
-            function dcrip_msns(inp){
+            function dcrip_msns(inp) {
                 patt = /::dcrip (\w*)+/i;
                 n_msns = patt.exec(inp)[1];
                 n_msns--;
-                
+
                 console.log(ncrip_hash);
-                $('.msn.room_' + room + '  > .content').html(function(index, oldhtml){
+                $('.msn.room_' + room + '  > .content').html(function(index, oldhtml) {
                     console.log(index);
                     t_cont = dcript(oldhtml);
                     console.log(t_cont);
                     $(this).html(t_cont);
-                    
+
                     if (n_msns == index)
                         return false;
                 });
@@ -250,14 +267,15 @@
                 d = new Date();
                 return d.getHours().toString() + ':' + d.getMinutes().toString();
             }
+            
             function add_msn(data) {
-                if ( ncrip_hash != '' && data.user != 'System' ){
+                if (ncrip_hash != '' && data.user != 'System') {
                     data.msn = dcript(data.msn);
                     console.log(data.msn);
                 }
                 msn = $('<div style="display:none" class="msn user_' + data.user + ' room_' + room + '" >\n\
-                    <b>' + data.user + ': </b><span class="content">' + data.msn +
-                        '</span><span class="pull-right muted" >&nbsp; ' + data.enviat + '</span></div>');
+                    <span class="circle-border">???</span><b>' + data.user + ': </b><span class="content">' + data.msn +
+                        '</span><span class="pull-right muted" >&nbsp; ' + data.enviat + '</span><div class="clearfix"></div></div>');
                 msn.prependTo('#board_chat').slideDown(100);
             }
 
@@ -270,7 +288,9 @@
 
                 refresh();
                 //refresh timer
-                setInterval(function(){refresh()}, 300);
+                setInterval(function() {
+                    refresh()
+                }, 300);
 
                 //events
                 $('#msn').keypress(function(e) {
