@@ -217,6 +217,7 @@
                     msn: 'Username changed to ' + user,
                     enviat: get_hour()
                 };
+                avatar_URL = '';
                 add_msn(data);
             }
             function change_room(inp) {
