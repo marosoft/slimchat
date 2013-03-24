@@ -60,8 +60,8 @@
             }
 
             .circle-border {
-                width:49px;
-                height:49px;
+                width:99px;
+                height:99px;
                 border-radius:8px;
                 -moz-border-radius: 8;
                 -webkit-border-radius: 8;
@@ -73,6 +73,8 @@
                 float: left;
                 margin-right: 10px;
                 border: 1px solid #999;
+                background-repeat:no-repeat;
+                background-position:center;
             }
             
 
@@ -200,7 +202,8 @@
                     user: user,
                     room: room,
                     msn: inp,
-                    enviat: strDateTime
+                    enviat: strDateTime,
+                    avatar_URL: avatar_URL
                 },
                 function(data) {
                     refresh();
@@ -283,13 +286,13 @@
                     console.log(data.msn);
                 }
                 msn = $('<div style="display:none" class="msn user_' + data.user + ' room_' + room + '" >\n\
-                    <span class="avatar_' + data.user +' circle-border">???</span><b>' + data.user + ': </b><span class="content">' + data.msn +
+                    <span class="avatar_' + data.user +' circle-border"></span><b>' + data.user + ': </b><span class="content">' + data.msn +
                         '</span><span class="pull-right muted" >&nbsp; ' + data.enviat + '</span><div class="clearfix"></div></div>');
                 msn.prependTo('#board_chat').slideDown(100);
 
-                $('.avatar_' + user).css( 'background-image', 'url(' + avatar_URL +')');
+                $('.avatar_' + data.user).css( 'background-image', 'url(' + data.avatar_URL +')');
 
-                $(".avatar_" + data.user).click( function() {
+                $(".avatar_" + user).click( function() {
                     $("#popupDialog").dialog('open');
                 });
                 
@@ -327,10 +330,20 @@
                                $(this).dialog('close');
                             },
                   'Accept': function() {
-                                avatar_URL = $(this).find('#avatarURL').val();
-                                $(this).find('#avatarURL').val('');
-                               $('.avatar_' + user).css( 'background-image', 'url(' + avatar_URL +')');
+                               avatar_URL = $(this).find('#avatarURL').val();
+                               $(this).find('#avatarURL').val('');
+                               
+                                $('.avatar_' + user).css( 'background-image', 'url(' + avatar_URL +')');    
+                               
                                $(this).dialog('close');
+                               
+                                $.post("avatar", {
+                                    user: user,
+                                    avatar_URL: avatar_URL
+                                },
+                                function(data) {
+                                    refresh();
+                                }, "json");
                             }
                     }
                 });

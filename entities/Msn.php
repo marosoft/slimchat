@@ -20,6 +20,9 @@ class Msn
 
    /** @Column(type="string", length=60, nullable=true) */
    private $enviat;
+   
+   /** @Column(type="string", length=120) */
+   private $avatar_URL;   
 
 
    function __construct(){
@@ -71,6 +74,16 @@ class Msn
    public function setEnviat($enviat)
    {
       $this->enviat = $enviat;
+   }
+   
+   public function getAvatarURL()
+   {
+       return $this->avatar_URL;
+   }
+   
+   public function setAvatarURL($avatar_URL)
+   {
+       $this->avatar_URL = $avatar_URL;
    }
 
 }

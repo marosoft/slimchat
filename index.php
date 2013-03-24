@@ -16,6 +16,16 @@ $app->get('/', function () use ($app) {
     $app->render('/index.php');
 });
 
+//update avatar
+$app->post('/avatar', function() use ($app, $entityManager){
+    $qb = $entityManager->createQueryBuilder();
+    $qb->update('models\Msn', 'm')
+            ->set('m.avatar_URL', $qb->expr()->literal($_POST['avatar_URL']))
+            ->where('m.user = ?1')
+            ->setParameter(1, $_POST['user']);
+    $query = $qb->getQuery()->execute();
+    
+});
 
 //send_msn
 $app->post('/send_msn', function() use ($app, $entityManager){
@@ -26,6 +36,7 @@ $app->post('/send_msn', function() use ($app, $entityManager){
     $msn->setUser( $_POST['user'] );
     $msn->setRoom( $_POST['room'] );
     $msn->setEnviat($date->format('H:i'));
+    $msn->setAvatarURL($_POST['avatar_URL']);
 
     $entityManager->persist($msn);
     $entityManager->flush();
